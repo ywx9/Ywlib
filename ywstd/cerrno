@@ -1,0 +1,5 @@
+/// \file cerrno
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <errno.h>

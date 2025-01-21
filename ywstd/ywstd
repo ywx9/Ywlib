@@ -1,0 +1,174 @@
+#pragma once /* clang-format off */ /* Python code start
+import os, sys, subprocess
+here = os.path.dirname(os.path.abspath(__file__))
+print("Compiling ywstd...")
+args = [fR"{here}\bin\cl", fR"{here}\ywstd.ixx", "/c", "/Dywstd_export=export", ]
+args+= [fR"/ifcOutput{here}\ywstd.ifc", fR"/Fo{here}\ywstd.obj", fR"/I{here}", fR"/I{here}\msvc-sub", ]
+args+= ["/std:c++latest", "/EHsc", "/nologo", "/W4", "/O2", "/Qpar", "/utf-8", ]
+if os.path.exists(fR"{here}\ywstd.ifc"): os.remove(fR"{here}\ywstd.ifc")
+if os.path.exists(fR"{here}\ywstd.obj"): os.remove(fR"{here}\ywstd.obj")
+# create ywstd.ixx
+with open(fR"{here}\ywstd.ixx", "w") as f:
+  f.write("export module ywstd;\n#include \"ywstd\"\n")
+subprocess.run(args)
+if os.path.exists(fR"{here}\ywstd.ixx"): os.remove(fR"{here}\ywstd.ixx")
+if os.path.exists(fR"{here}\ywstd.ifc") and os.path.exists(fR"{here}\ywstd.obj"):
+  print("ywstd compiled successfully.")
+  sys.exit(0)
+else:
+  print("Failed to compile ywstd.")
+  sys.exit(1)
+# Python code end */
+
+#ifndef ywstd_export
+#define ywstd_export
+#define ywstd_is_exported 0
+#else
+#define _BUILD_STD_MODULE
+#define ywstd_is_exported 1
+#endif
+
+#ifdef _M_ARM
+#error "ywstd does not support ARM architecture."
+#endif
+
+#ifdef _M_ARM64
+#error "ywstd does not support ARM64 architecture."
+#endif
+
+#ifdef _M_IX86
+#error "ywstd does not support x86 architecture."
+#endif
+
+#ifdef _M_CEE
+#error "ywstd does not support C++/CLI."
+#endif
+
+#if !defined(_M_X64) || !defined(_WIN64)
+#error "ywstd requires x64 architecture."
+#endif
+
+#if 0  // `python ywstd/ywstd` to compile ywstd as a module
+#endif // `#include "ywstd/ywstd"` to use ywstd in your code
+
+#ifdef ywstd_import
+import ywstd;
+#endif
+
+#pragma warning(push)
+#pragma warning(disable:5244)
+#include "cassert"
+#include "cctype"
+#include "cerrno"
+#include "cfenv"
+#include "cfloat"
+#include "cinttypes"
+#include "climits"
+#include "clocale"
+#include "cmath"
+#include "csetjmp"
+#include "csignal"
+#include "cstdarg"
+#include "cstddef"
+#include "cstdint"
+#include "cstring"
+
+#include "type_traits"
+#include "concepts"
+#pragma warning(pop)
+
+#ifndef ywstd_import
+
+#if 0
+
+#include "cstdio"
+#include "cstdlib"
+#include "ctime"
+#include "cuchar"
+#include "cwchar"
+#include "cwctype"
+
+#include "algorithm"
+#include "any"
+#include "array"
+#include "atomic"
+#include "barrier"
+#include "bit"
+#include "bitset"
+#include "charconv"
+#include "chrono"
+#include "compare"
+#include "complex"
+#include "condition_variable"
+#include "coroutine"
+#include "exception"
+#include "execution"
+#include "expected"
+#include "filesystem"
+#include "format"
+#include "fstream"
+#include "functional"
+#include "future"
+#include "initializer_list"
+#include "iomanip"
+#include "ios"
+#include "iosfwd"
+#include "iostream"
+#include "istream"
+#include "iterator"
+#include "latch"
+#include "limits"
+#include "list"
+#include "locale"
+#include "map"
+#include "mdspan"
+#include "memory"
+#include "memory_resource"
+#include "mutex"
+#include "new"
+#include "numbers"
+#include "numeric"
+#include "optional"
+#include "ostream"
+#include "print"
+#include "queue"
+#include "random"
+#include "ranges"
+#include "ratio"
+#include "regex"
+#include "scoped_allocator"
+#include "semaphore"
+#include "set"
+#include "shared_mutex"
+#include "source_location"
+#include "span"
+#include "spanstream"
+#include "sstream"
+#include "stack"
+#include "stacktrace"
+#include "stdexcept"
+#include "stdfloat"
+#include "stop_token"
+#include "streambuf"
+#include "string"
+#include "string_view"
+#include "syncstream"
+#include "system_error"
+#include "thread"
+#include "tuple"
+#include "typeindex"
+#include "typeinfo"
+#include "unordered_map"
+#include "unordered_set"
+#include "utility"
+#include "valarray"
+#include "variant"
+#include "vector"
+
+#endif
+
+
+
+#else
+
+#endif

@@ -1,0 +1,12 @@
+/// \file csetjmp
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <setjmp.h>
+#ifndef ywstd_import
+namespace std {
+ywstd_export using ::jmp_buf;
+ywstd_export using ::longjmp;
+using ::setjmp;
+}
+#endif

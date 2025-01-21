@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/ywstd",
+                "${workspaceFolder}/ywstd/msvc-sub"
+            ],
+            "defines": [],
+            "compilerPath": "${workspaceFolder}/ywstd/bin/cl.exe",
+            "cppStandard": "c++23",
+            "intelliSenseMode": "msvc-x64",
+            "cStandard": "c17"
+        }
+    ],
+    "version": 4
+}

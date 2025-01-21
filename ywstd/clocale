@@ -1,0 +1,13 @@
+/// \file clocale
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <locale.h>
+
+#ifndef ywstd_import
+namespace std {
+ywstd_export using lconv = ::lconv;
+ywstd_export lconv* __cdecl localeconv() noexcept { return ::localeconv(); }
+ywstd_export char* __cdecl setlocale(int category, const char* locale) noexcept { return ::setlocale(category, locale); }
+}
+#endif

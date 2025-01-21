@@ -1,0 +1,48 @@
+/// \file cstddef
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <stddef.h>
+
+#include <xtr1common>
+
+#ifndef ywstd_import
+ywstd_export namespace std {
+
+using size_t = unsigned long long;
+using ptrdiff_t = long long;
+using nullptr_t = decltype(nullptr);
+using max_align_t = double;
+enum class byte : unsigned char {};
+
+template<typename Int> requires is_integral_v<Int> [[nodiscard]] constexpr byte operator<<(const byte b, const Int s) noexcept {
+  return static_cast<byte>(static_cast<unsigned char>(static_cast<unsigned int>(b) << s));
+}
+template<typename Int> requires is_integral_v<Int> [[nodiscard]] constexpr byte operator>>(const byte b, const Int s) noexcept {
+  return static_cast<byte>(static_cast<unsigned char>(static_cast<unsigned int>(b) >> s));
+}
+
+[[nodiscard]] constexpr byte operator|(const byte x, const byte y) noexcept {
+  return static_cast<byte>(static_cast<unsigned char>(static_cast<unsigned int>(x) | static_cast<unsigned int>(y)));
+}
+[[nodiscard]] constexpr byte operator&(const byte x, const byte y) noexcept {
+  return static_cast<byte>(static_cast<unsigned char>(static_cast<unsigned int>(x) & static_cast<unsigned int>(y)));
+}
+[[nodiscard]] constexpr byte operator^(const byte x, const byte y) noexcept {
+  return static_cast<byte>(static_cast<unsigned char>(static_cast<unsigned int>(x) ^ static_cast<unsigned int>(y)));
+}
+[[nodiscard]] constexpr byte operator~(const byte b) noexcept {
+  return static_cast<byte>(static_cast<unsigned char>(~static_cast<unsigned int>(b)));
+}
+
+template<typename Int> requires is_integral_v<Int> constexpr byte& operator<<=(byte& b, const Int s) noexcept { return b = b << s; }
+template<typename Int> requires is_integral_v<Int> constexpr byte& operator>>=(byte& b, const Int s) noexcept { return b = b >> s; }
+
+constexpr byte& operator|=(byte& x, const byte y) noexcept { return x = x | y; }
+constexpr byte& operator&=(byte& x, const byte y) noexcept { return x = x & y; }
+constexpr byte& operator^=(byte& x, const byte y) noexcept { return x = x ^ y; }
+
+template<typename Int> requires is_integral_v<Int> [[nodiscard]] [[msvc::intrinsic]]
+constexpr Int to_integer(const byte b) noexcept { return static_cast<Int>(b); }
+}
+#endif

@@ -1,0 +1,79 @@
+/// \file new
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#ifndef ywstd_export
+#define ywstd_export
+#endif
+
+#include <crtdefs.h>
+#include <exception>
+#include <type_traits>
+
+#ifndef ywstd_import
+ywstd_export namespace std {
+
+class bad_array_new_length;
+
+class bad_alloc : public exception {
+  friend bad_array_new_length;
+  bad_alloc(const char* message) noexcept : exception(message, 1) {}
+protected:
+  void _Doraise() const override { _RAISE(*this); }
+public:
+  ~bad_alloc() noexcept override {}
+  bad_alloc() noexcept : exception("bad allocation", 1) {}
+};
+
+class bad_array_new_length : public bad_alloc {
+public:
+  bad_array_new_length() noexcept : bad_alloc("bad array new length") {}
+};
+
+enum class align_val_t : size_t {};
+
+struct nothrow_t { explicit nothrow_t() = default; };
+extern const nothrow_t nothrow;
+
+struct destroying_delete_t { explicit destroying_delete_t() = default; };
+inline constexpr destroying_delete_t destroying_delete{};
+
+inline constexpr size_t hardware_constructive_interference_size = 64;
+inline constexpr size_t hardware_destructive_interference_size  = 64;
+
+using new_handler = void(__cdecl*)();
+_CRTIMP2 new_handler __cdecl set_new_handler(new_handler) noexcept;
+[[nodiscard]] _CRTIMP2 new_handler __cdecl get_new_handler() noexcept;
+
+template<typename T> [[nodiscard]] constexpr T* launder(T* p) noexcept {
+  static_assert(!is_function_v<T> && !is_void_v<T>);
+  return __builtin_launder(p);
+}
+}
+
+[[nodiscard]] __declspec(allocator) void* __cdecl operator new(size_t);
+[[nodiscard]] __declspec(allocator) void* __cdecl operator new(size_t, const ::std::nothrow_t&) noexcept;
+[[nodiscard]] __declspec(allocator) void* __cdecl operator new[](size_t);
+[[nodiscard]] __declspec(allocator) void* __cdecl operator new[](size_t, const ::std::nothrow_t&) noexcept;
+void __cdecl operator delete(void*) noexcept;
+void __cdecl operator delete(void* _Block, const ::std::nothrow_t&) noexcept;
+void __cdecl operator delete[](void*) noexcept;
+void __cdecl operator delete[](void*, const ::std::nothrow_t&) noexcept;
+void __cdecl operator delete(void*, size_t) noexcept;
+void __cdecl operator delete[](void*, size_t) noexcept;
+[[nodiscard]] __declspec(allocator) void* __cdecl operator new(size_t, ::std::align_val_t);
+[[nodiscard]] __declspec(allocator) void* __cdecl operator new(size_t, ::std::align_val_t, const ::std::nothrow_t&) noexcept;
+[[nodiscard]] __declspec(allocator) void* __cdecl operator new[](size_t, ::std::align_val_t);
+[[nodiscard]] __declspec(allocator) void* __cdecl operator new[](size_t, ::std::align_val_t, const ::std::nothrow_t&) noexcept;
+void __cdecl operator delete(void*, ::std::align_val_t) noexcept;
+void __cdecl operator delete(void*, ::std::align_val_t, const ::std::nothrow_t&) noexcept;
+void __cdecl operator delete[](void*, ::std::align_val_t) noexcept;
+void __cdecl operator delete[](void*, ::std::align_val_t, const ::std::nothrow_t&) noexcept;
+void __cdecl operator delete(void*, size_t, ::std::align_val_t) noexcept;
+void __cdecl operator delete[](void*, size_t, ::std::align_val_t) noexcept;
+
+[[nodiscard]] constexpr void* __cdecl operator new(size_t size, void* where) noexcept { (void)size; return where; }
+[[nodiscard]] inline void* __cdecl operator new[](size_t size, void* where) noexcept { (void)size; return where; }
+inline void __cdecl operator delete(void*, void*) noexcept { return; }
+inline void __cdecl operator delete[](void*, void*) noexcept {}
+#endif

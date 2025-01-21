@@ -1,0 +1,135 @@
+/// \file exception
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#ifndef ywstd_export
+#define ywstd_export
+#endif
+
+#include <type_traits>
+
+#if ywstd_is_exported
+#include <vcruntime.h>
+#include <crtdefs.h>
+#define _RAISE(x) ::_invoke_watson(nullptr, nullptr, nullptr, 0, 0)
+extern "C" {
+struct __std_exception_data { const char* _What; bool _DoFree; };
+_VCRTIMP void __cdecl __std_exception_copy(const __std_exception_data*, __std_exception_data*);
+_VCRTIMP void __cdecl __std_exception_destroy(__std_exception_data*);
+using terminate_handler = void(__cdecl*)();
+_ACRTIMP terminate_handler __cdecl set_terminate(terminate_handler) throw();
+_ACRTIMP terminate_handler __cdecl _get_terminate();
+_ACRTIMP [[noreturn]] void __cdecl terminate() throw();
+}
+extern "C++" _CRTIMP2 void __cdecl __ExceptionPtrCreate(void*) noexcept;
+extern "C++" _CRTIMP2 void __cdecl __ExceptionPtrDestroy(void*) noexcept;
+extern "C++" _CRTIMP2 void __cdecl __ExceptionPtrCopy(void*, const void*) noexcept;
+extern "C++" _CRTIMP2 void __cdecl __ExceptionPtrAssign(void*, const void*) noexcept;
+extern "C++" _CRTIMP2 bool __cdecl __ExceptionPtrCompare(const void*, const void*) noexcept;
+extern "C++" _CRTIMP2 bool __cdecl __ExceptionPtrToBool(const void*) noexcept;
+extern "C++" _CRTIMP2 void __cdecl __ExceptionPtrSwap(void*, void*) noexcept;
+extern "C++" _CRTIMP2 void __cdecl __ExceptionPtrCurrentException(void*) noexcept;
+extern "C++" [[noreturn]] _CRTIMP2 void __cdecl __ExceptionPtrRethrow(const void*);
+extern "C++" _CRTIMP2 void __cdecl __ExceptionPtrCopyException(void*, const void*, const void*) noexcept;
+#endif
+
+#ifndef ywstd_import
+ywstd_export namespace std {
+
+class exception {
+  ::__std_exception_data _data;
+protected:
+  virtual void _Doraise() const { _RAISE(*this); }
+public:
+  virtual ~exception() noexcept { __std_exception_destroy(&_data); }
+  exception() noexcept : _data() {}
+  explicit exception(const char* const message) noexcept : _data() {
+    ::__std_exception_data i{message, true};
+    ::__std_exception_copy(&i, &_data);
+  }
+  exception(const char* const message, int) noexcept : _data() { _data._What = message; }
+  exception(const exception& e) noexcept : _data() { ::__std_exception_copy(&e._data, &_data); }
+  exception& operator=(const exception& e) noexcept {
+    if (this == &e) return *this;
+    ::__std_exception_destroy(&_data);
+    ::__std_exception_copy(&e._data, &_data);
+    return *this;
+  }
+  [[nodiscard]] virtual const char* what() const { return _data._What ? _data._What : "Unknown exception"; }
+};
+
+class bad_exception : public exception {
+public:
+  bad_exception() noexcept : exception("bad exception", 1) {}
+};
+
+using terminate_handler = void(__cdecl*)();
+[[nodiscard]] inline terminate_handler __cdecl set_terminate(terminate_handler th) noexcept { ::set_terminate(th); }
+[[nodiscard]] inline terminate_handler __cdecl get_terminate() noexcept { return ::_get_terminate(); }
+[[noreturn]] inline void __cdecl terminate() noexcept { ::terminate(); }
+
+class exception_ptr {
+  void *_data1{}, *_data2{};
+public:
+  ~exception_ptr() noexcept { ::__ExceptionPtrDestroy(this); }
+  exception_ptr() noexcept { ::__ExceptionPtrCreate(this); }
+  exception_ptr(nullptr_t) noexcept { ::__ExceptionPtrCreate(this); }
+  exception_ptr(const exception_ptr& ep) noexcept { ::__ExceptionPtrCopy(this, &ep); }
+  exception_ptr& operator=(const exception_ptr& ep) noexcept { return ::__ExceptionPtrAssign(this, &ep), *this; }
+  exception_ptr& operator=(nullptr_t) noexcept {
+    exception_ptr ep;
+    return ::__ExceptionPtrAssign(this, &ep), *this;
+  }
+  explicit operator bool() const noexcept { return ::__ExceptionPtrToBool(this); }
+  static exception_ptr _Copy_exception(void* e, const void* ep) {
+    exception_ptr r;
+    if (!ep) return r;
+    return ::__ExceptionPtrCopyException(&r, e, ep), r;
+  }
+  friend void swap(exception_ptr& l, exception_ptr& r) noexcept { ::__ExceptionPtrSwap(&l, &r); }
+  [[nodiscard]] friend bool operator==(const exception_ptr& l, const exception_ptr& r) noexcept { return ::__ExceptionPtrCompare(&l, &r); }
+  [[nodiscard]] friend bool operator==(const exception_ptr& l, nullptr_t) noexcept { return !l; }
+};
+
+[[nodiscard]] inline exception_ptr current_exception() noexcept {
+  exception_ptr r;
+  return ::__ExceptionPtrCurrentException(&r), r;
+}
+
+[[noreturn]] inline void rethrow_exception(exception_ptr ep) { ::__ExceptionPtrRethrow(&ep); }
+
+template<typename Ex> void* __GetExceptionInfo(Ex);
+template<typename Ex> [[nodiscard]] exception_ptr make_exception_ptr(Ex e) noexcept {
+  return exception_ptr::_Copy_exception(std::addressof(e), __GetExceptionInfo(e));
+}
+
+class nested_exception {
+  exception_ptr _ep;
+public:
+  virtual ~nested_exception() noexcept {}
+  nested_exception() noexcept : _ep(std::current_exception()) {}
+  nested_exception(const nested_exception&) noexcept = default;
+  nested_exception& operator=(const nested_exception&) noexcept = default;
+  [[noreturn]] void rethrow_nested() const { _ep ? std::rethrow_exception(_ep) : std::terminate(); }
+  [[nodiscard]] exception_ptr nested_ptr() const noexcept { return _ep; }
+};
+
+template<typename U> struct _with_nested_v2 : U, nested_exception {
+  template<typename T> explicit _with_nested_v2(T&& a) : U(std::forward<T>(a)), nested_exception() {}
+};
+template<typename T> [[noreturn]] void throw_with_nested(T&& a) {
+  using U = decay_t<T>;
+  if constexpr (is_class_v<U> && !is_base_of_v<nested_exception, U> && !is_final_v<U>)
+    throw(_with_nested_v2<U>(std::forward<T>(a)));
+  else throw(std::forward<T>(a));
+}
+
+template<typename T> void rethrow_if_nested(const T& a) {
+  constexpr bool b = is_polymorphic_v<T> && (!is_base_of_v<nested_exception, T> || is_convertible_v<T*, nested_exception*>);
+  if constexpr (b) {
+    const auto ne = dynamic_cast<const nested_exception*>(std::addressof(a));
+    if (ne) ne->rethrow_nested();
+  }
+}
+}
+#endif

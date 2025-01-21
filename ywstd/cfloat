@@ -1,0 +1,5 @@
+/// \file cfloat
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <float.h>

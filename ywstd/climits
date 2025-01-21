@@ -1,0 +1,5 @@
+/// \file climits
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <limits.h>

@@ -1,0 +1,7 @@
+/// \file xtr1common
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#ifndef ywstd_import
+#include "../msvc-stl/xtr1common"
+#endif

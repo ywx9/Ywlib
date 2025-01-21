@@ -1,0 +1,24 @@
+/// \file cctype
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <ctype.h>
+
+#ifndef ywstd_import
+namespace std {
+ywstd_export inline int __cdecl isalnum(int c) noexcept { return ::isalnum(c); }
+ywstd_export inline int __cdecl isalpha(int c) noexcept { return ::isalpha(c); }
+ywstd_export inline int __cdecl isblank(int c) noexcept { return ::isblank(c); }
+ywstd_export inline int __cdecl iscntrl(int c) noexcept { return ::iscntrl(c); }
+ywstd_export inline int __cdecl isdigit(int c) noexcept { return ::isdigit(c); }
+ywstd_export inline int __cdecl isgraph(int c) noexcept { return ::isgraph(c); }
+ywstd_export inline int __cdecl islower(int c) noexcept { return ::islower(c); }
+ywstd_export inline int __cdecl isprint(int c) noexcept { return ::isprint(c); }
+ywstd_export inline int __cdecl ispunct(int c) noexcept { return ::ispunct(c); }
+ywstd_export inline int __cdecl isspace(int c) noexcept { return ::isspace(c); }
+ywstd_export inline int __cdecl isupper(int c) noexcept { return ::isupper(c); }
+ywstd_export inline int __cdecl isxdigit(int c) noexcept { return ::isxdigit(c); }
+ywstd_export inline int __cdecl tolower(int c) noexcept { return ::tolower(c); }
+ywstd_export inline int __cdecl toupper(int c) noexcept { return ::toupper(c); }
+}
+#endif

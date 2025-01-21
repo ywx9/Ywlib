@@ -1,0 +1,10 @@
+/// \file cstdarg
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <stdarg.h>
+#ifndef ywstd_import
+namespace std {
+ywstd_export using va_list = char*;
+}
+#endif

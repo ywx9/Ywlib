@@ -1,0 +1,19 @@
+/// \file cinttypes
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <inttypes.h>
+
+#include <cstdint>
+
+#ifndef ywstd_import
+namespace std {
+ywstd_export using imaxdiv_t = ::imaxdiv_t;
+ywstd_export inline intmax_t __cdecl imaxabs(intmax_t n) noexcept { return ::imaxabs(n); }
+ywstd_export inline imaxdiv_t __cdecl imaxdiv(intmax_t numer, intmax_t denom) noexcept { return ::imaxdiv(numer, denom); }
+ywstd_export inline intmax_t __cdecl strtoimax(const char* nptr, char** endptr, int base) noexcept { return ::strtoimax(nptr, endptr, base); }
+ywstd_export inline uintmax_t __cdecl strtoumax(const char* nptr, char** endptr, int base) noexcept { return ::strtoumax(nptr, endptr, base); }
+ywstd_export inline intmax_t __cdecl wcstoimax(const wchar_t* nptr, wchar_t** endptr, int base) noexcept { return ::wcstoimax(nptr, endptr, base); }
+ywstd_export inline uintmax_t __cdecl wcstoumax(const wchar_t* nptr, wchar_t** endptr, int base) noexcept { return ::wcstoumax(nptr, endptr, base); }
+}
+#endif

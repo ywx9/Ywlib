@@ -1,0 +1,13 @@
+/// \file csignal
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <signal.h>
+#ifndef ywstd_import
+namespace std {
+ywstd_export using sig_atomic_t = int;
+ywstd_export using signal_handler = void(__cdecl)(int);
+ywstd_export inline signal_handler* __cdecl signal(int sig, signal_handler* handler) { return ::signal(sig, handler); }
+ywstd_export inline int __cdecl raise(int sig) { return ::raise(sig); }
+}
+#endif

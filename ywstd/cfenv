@@ -1,0 +1,21 @@
+/// \file cfenv
+/// \copyright (c) 2022 ywx9.com
+
+#pragma once
+#include <fenv.h>
+
+#ifndef ywstd_import
+namespace std {
+ywstd_export using fenv_t = ::fenv_t;
+ywstd_export using fexcept_t = unsigned long;
+ywstd_export inline int __cdecl fegetround() noexcept { return ::fegetround(); }
+ywstd_export inline int __cdecl fesetround(int round) noexcept { return ::fesetround(round); }
+ywstd_export inline int __cdecl fegetenv(fenv_t* env) noexcept { return ::fegetenv(env); }
+ywstd_export inline int __cdecl fesetenv(const fenv_t* env) noexcept { return ::fesetenv(env); }
+ywstd_export inline int __cdecl feholdexcept(fenv_t* env) noexcept { return ::feholdexcept(env); }
+ywstd_export inline int __cdecl feclearexcept(int excepts) noexcept { return ::feclearexcept(excepts); }
+ywstd_export inline int __cdecl fetestexcept(int excepts) noexcept { return ::fetestexcept(excepts); }
+ywstd_export inline int __cdecl fegetexceptflag(fexcept_t* flagp, int excepts) noexcept { return ::fegetexceptflag(flagp, excepts); }
+ywstd_export inline int __cdecl fesetexceptflag(const fexcept_t* flagp, int excepts) noexcept { return ::fesetexceptflag(flagp, excepts); }
+}
+#endif
