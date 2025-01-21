@@ -32,11 +32,5 @@ else:
   sys.exit(1)
 # Python code end */
 
-#define ywlib_python_escape "\
-"""
-
+#pragma comment(lib, "libcpmt")
 #include <ywstd>
-
-#undef ywlib_python_escape
-#define ywlib_python_escape "\
-"""

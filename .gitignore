@@ -12,13 +12,13 @@
 !mspdbcore.dll
 !tbbmalloc.dll
 
-!advapi32.dll
-!kernel32.dll
+!advapi32.lib
+!kernel32.lib
 !libcmt.lib
 !libcpmt.lib
 !libucrt.lib
 !libvcruntime.lib
 !oldnames.lib
-!user32.dll
+!user32.lib
 !uuid.lib
 !vcomp.lib

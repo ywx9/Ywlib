@@ -1,3 +1,40 @@
+// #include <exception>
+
+// int main() {
+//   std::exception_ptr ep{};
+// }
+
+// #include <exception>
+// #include <iostream>
+// #include <typeinfo>
+
+// #include <yvals.h>
+// #define _CRT_MSVCP_CURRENT "msvcp140.dll"
+// #include <use_ansi.h>
+// #include <crtdbg.h>
+// #include <crtdefs.h>
+// #include <cstdlib>
+// #include <type_traits>
+// #include <malloc.h>
+// #include <vcruntime_exception.h>
+
+// extern "C++" void __cdecl __ExceptionPtrCreate(void*) noexcept;
+// extern "C++" void __cdecl __ExceptionPtrDestroy(void*) noexcept;
+
+// class exception_ptr {
+//   void *_data1{}, *_data2{};
+// public:
+//   exception_ptr() { __ExceptionPtrCreate(this); }
+//   ~exception_ptr() { __ExceptionPtrDestroy(this); }
+// };
+
+// // using type = decltype(__ExceptionPtrCreate);
+
+// int main() {
+//   // std::cout << typeid(type).name() << std::endl;
+//   exception_ptr ep;
+// }
+
 #include "ywlib"
 
 int main() {
@@ -60,7 +97,6 @@ int main() {
   static_cast<void>(std::fdim(1.5f, 2.5f), std::fdim(1.5, 2.5), std::fdim(1.5l, 2.5l));
   static_cast<void>(std::fabs(1.5f), std::fabs(1.5), std::fabs(1.5l));
   static_cast<void>(std::fmod(1.5f, 2.5f), std::fmod(1.5, 2.5), std::fmod(1.5l, 2.5l));
-
 
 
 
